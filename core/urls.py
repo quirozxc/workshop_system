@@ -33,4 +33,6 @@ urlpatterns = [
     path('logout/', logout_then_login, name='logout'),
     #
     path('user/', include('user.urls')),
+    path('order/', include('order.urls')),
+    #
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

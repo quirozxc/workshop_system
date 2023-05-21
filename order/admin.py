@@ -1,5 +1,6 @@
 from django.contrib import admin
-from order.models import RepairOrder, Failture, Note
+from order.models import RepairOrder, Failture
+from workshop.models import Note
 from workshop.models import Assignment
 # Register your models here.
 class NoteInline(admin.StackedInline):

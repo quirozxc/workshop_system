@@ -15,8 +15,11 @@ class Assignment(models.Model):
     class Meta:
         db_table = 'assignment'
     #
+    def get_pendings():
+        return Assignment.objects.filter(invoice=None)
+    #
     def __str__(self):
-        return 'Assignment Record #%d' % (self.pk)
+        return 'Assignment Record #%s' % (self.pk)
 #
 class Invoice(models.Model):
     assignment = models.OneToOneField(Assignment, on_delete=models.RESTRICT)
@@ -24,21 +27,22 @@ class Invoice(models.Model):
     warranty_days = models.SmallIntegerField('Warranty Days', default=settings.DEFAULT_WARRANTY_DAYS)
     #
     creation_date = models.DateField('Creation Date', auto_now_add=True)
-    delivery_date = models.DateField('Delivery Date', null=True, blank=True)
+    pickup_date = models.DateField('Delivery Date', null=True, blank=True)
     #
     class Meta:
         db_table = 'invoice'
     #
     def __str__(self):
-        return 'Invoice Record #%d' % (self.pk)
+        return 'Invoice Record #%s' % (self.pk)
 #
-class Consideration(models.Model):
+class Note(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete=models.CASCADE, null=True, blank=True)
+    repair_order = models.OneToOneField(RepairOrder, on_delete=models.CASCADE, null=True, blank=True)
     note = models.TextField('Note', max_length=512, null=True, blank=True)
     #
     class Meta:
-        db_table = 'consideration'
+        db_table = 'note'
     #
     def __str__(self):
-        return 'Consideration Record #%d' % (self.pk)
+        return 'Note Record #%s' % (self.pk)
 #

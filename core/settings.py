@@ -148,3 +148,6 @@ VE_CODE = 58
 
 # Used in workshop.models.Invoice
 DEFAULT_WARRANTY_DAYS = 15
+
+DELEGATE_NAME = 'Technical Specialist'
+MANAGER_NAME = 'Assignment Manager'

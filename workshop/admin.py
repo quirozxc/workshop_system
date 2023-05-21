@@ -1,16 +1,16 @@
 from django.contrib import admin
-from workshop.models import Assignment, Invoice, Consideration
+from workshop.models import Assignment, Invoice, Note
 # Register your models here.
 class AssignmentAdmin(admin.ModelAdmin):
     list_display = ('order', 'delegate', 'is_guarantee', 'order_date')
     #
 admin.site.register(Assignment, AssignmentAdmin)
 #
-class ConsiderationInline(admin.StackedInline):
-    model = Consideration
+class NoteInline(admin.StackedInline):
+    model = Note
 #
 class InvoiceAdmin(admin.ModelAdmin):
-    list_display = ('assignment', 'amount', 'warranty_days', 'creation_date', 'delivery_date',)
-    inlines = (ConsiderationInline,)
+    list_display = ('assignment', 'amount', 'warranty_days', 'creation_date', 'pickup_date',)
+    inlines = (NoteInline,)
 #
 admin.site.register(Invoice, InvoiceAdmin)
