@@ -20,7 +20,7 @@ class User(AbstractUser):
         },
     )
     #
-    dni = models.PositiveIntegerField('Identification Document', null=True, blank=True)
+    dni = models.PositiveIntegerField(_('Identification Document'))
     #
     first_name = models.CharField(_("first name"), max_length=150)
     last_name = models.CharField(_("last name"), max_length=150)
@@ -29,21 +29,35 @@ class User(AbstractUser):
         db_table= 'user'
     #
     def pending_assignments(self, just_guarantee=False):
-        return self.assignment_set.filter(is_guarantee=just_guarantee, invoice=None, order__is_active=True)
+        return self.assignment_set.filter(
+            is_guarantee=just_guarantee,
+            invoice=None,
+            order__is_active=True,
+            order__was_reviewed=False,
+        )
     #
     def pending_all_assignments(self):
-        return self.assignment_set.filter(invoice=None, order__is_active=True)
+        return self.assignment_set.filter(
+            invoice=None,
+            order__is_active=True,
+            order__was_reviewed=False,
+        )
     #
     def __str__(self):
         if self.first_name and self.last_name:
             return '%s %s' % (self.first_name, self.last_name)
-        return self.username
+        elif self.username:
+            return self.username
+        elif self.dni:
+            return 'DNI: %d' % (self.dni,)
+        else:
+            return 'User ID #%d' % (self.id)
 #
 class PhoneNumber(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     idc = models.PositiveSmallIntegerField('International Dialing Code', default=settings.VE_CODE)
     number = models.PositiveIntegerField('Phone Number')
-    is_whatsapp_number = models.BooleanField('Is Whatsapp Number', default=False)
+    is_whatsapp_number = models.BooleanField('Is Whatsapp Number', default=True)
     #
     class Meta:
         db_table = 'phone_number'

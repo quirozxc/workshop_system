@@ -1,13 +1,60 @@
 from django import forms
+from betterforms.multiform import MultiModelForm
+from .models import RepairOrder
+#
+from user.forms import UserForm, PhoneNumberForm
+from device.forms import DeviceForm
+from workshop.forms import AssignmentForm, NoteForm
 
-class RepairOrderForm(forms.Form):
-    client_first_name = forms.CharField(
-        label='Nombre del Cliente',
-        max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Nombre del Cliente'})
-    )
-    client_last_name = forms.CharField(
-        label='Apellido del Cliente',
-        max_length=150,
-        widget=forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Apellido del Cliente'})
-    )
+class RepairOrderForm(forms.ModelForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        #
+        self.fields['failture'].widget.attrs.update({
+            'class': 'form-select',
+            'placeholder': 'Fallas y Desperfectos',
+        },)
+        self.fields['description'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Descripción',
+            'style': 'height: 100px',
+        },)
+        self.fields['it_includes'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Se incluye',
+        },)
+        self.fields['budget'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Presupuesto',
+        },)
+        #
+    #
+    class Meta:
+        model = RepairOrder
+        fields = ['failture', 'description', 'it_includes', 'budget']
+        labels = {
+            'failture': 'Fallas y Despecfectos',
+            'description': 'Descripción',
+            'it_includes': 'Se incluye',
+            'budget': 'Presupuesto',
+        }
+    #
+#
+class CreateRepairOrderMultiForm(MultiModelForm):
+    form_classes = {
+        'user': UserForm,
+        'phone_number': PhoneNumberForm,
+        'device': DeviceForm,
+        'repair_order': RepairOrderForm,
+        'assignment': AssignmentForm,
+    }
+#
+class UpdateRepairOrderMultiForm(CreateRepairOrderMultiForm):
+    def __init__(self, *args, **kwargs):
+        self.form_classes.update({
+            'note': NoteForm,
+        },)
+        super().__init__(*args, **kwargs)
+    #
+#

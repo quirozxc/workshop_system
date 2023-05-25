@@ -12,6 +12,14 @@ class DeviceInline(admin.TabularInline):
     extra = 1
 #
 class UserAdmin(_UserAdmin):
+    _UserAdmin.fieldsets += (
+        ('Unique Identifier', {
+            'classes': ('wide',),
+            'fields': (
+                'dni',
+            )}
+        ),
+    )
     inlines = (PhoneNumberInline, DeviceInline,)
 #
 admin.site.register(User, UserAdmin)

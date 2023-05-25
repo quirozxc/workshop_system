@@ -2,7 +2,7 @@
 {% block title %}{% endblock %}
 {% block content %}
 
-    <h1 class="fs-2 mt-4 mb-2">Orden Nueva</h1>
+    <h1 class="fs-2 mt-4 mb-2">Actualizar Orden</h1>
     <form method="post">
         {% csrf_token %}
         <h4 class="text-warning mb-3">Información del Cliente</h4>
@@ -84,7 +84,7 @@
             {{ form.repair_order.description }}
             {{ form.repair_order.description.label_tag }}
         </div>
-        <div class="row g-2 pb-2">
+        <div class="row g-2">
             <div class="col">
                 <div class="form-floating text-black">
                     {{ form.repair_order.it_includes }}
@@ -101,6 +101,10 @@
                 </div>
             </div>
         </div>
+        <div class="form-floating text-black mt-2 mb-4">
+            {{ form.note.note }}
+            {{ form.note.note.label_tag }}
+        </div>
         <hr>
         <h4 class="text-warning mt-3 mb-3">Gerencia</h4>
         <div class="form-floating text-black">
@@ -116,7 +120,7 @@
             </label>
         </div>
         <div class="text-end mt-4">
-            <button class="btn btn-lg btn-outline-warning" type="submit">Crear</button>
+            <button class="btn btn-lg btn-outline-warning" type="submit">Actualizar</button>
         </div>
     </form>
 

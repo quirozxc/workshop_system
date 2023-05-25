@@ -4,7 +4,6 @@ from user.models import User
 class Device(models.Model):
     owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='Owner')
     name = models.CharField('Name', max_length=32)
-    description = models.CharField('Description', max_length=128, null=True, blank=True)
     brand = models.CharField('Brand', max_length=32, null=True, blank=True)
     model = models.CharField('Model', max_length=32, null=True, blank=True)
     serial = models.PositiveIntegerField('Serial Number', null=True, blank=True)

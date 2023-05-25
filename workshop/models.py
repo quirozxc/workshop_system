@@ -1,7 +1,8 @@
 from django.db import models
+from django.urls import reverse
+from django.conf import settings
 from order.models import RepairOrder
 from user.models import User
-from django.conf import settings
 # Create your models here.
 class Assignment(models.Model):
     order = models.ForeignKey(RepairOrder, on_delete=models.CASCADE)
@@ -20,6 +21,10 @@ class Assignment(models.Model):
     #
     def __str__(self):
         return 'Assignment Record #%s' % (self.pk)
+    #
+    def get_absolute_url(self):
+        return reverse("update_order", kwargs={"pk": self.pk})
+    
 #
 class Invoice(models.Model):
     assignment = models.OneToOneField(Assignment, on_delete=models.RESTRICT)
