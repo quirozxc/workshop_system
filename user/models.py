@@ -34,14 +34,21 @@ class User(AbstractUser):
             invoice=None,
             order__is_active=True,
             order__was_reviewed=False,
-        )
+        ).order_by('id')
     #
     def pending_all_assignments(self):
         return self.assignment_set.filter(
             invoice=None,
             order__is_active=True,
             order__was_reviewed=False,
-        )
+        ).order_by('id')
+    #
+    def reviewed_assignments(self):
+        return self.assignment_set.filter(
+            invoice=None,
+            order__is_active=True,
+            order__was_reviewed=True,
+        ).order_by('id')
     #
     def __str__(self):
         if self.first_name and self.last_name:

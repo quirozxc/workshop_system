@@ -3,13 +3,13 @@
 {% block content %}
 
     <div class="list-group list-group-horizontal text-center mt-4">
-        <a href="{% url 'home_page' %}" class="list-group-item list-group-item-action list-group-item-warning active">Pendientes</a>
-        <a href="{% url 'reviewed_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning">Revisadas</a>
+        <a href="{% url 'home_page' %}" class="list-group-item list-group-item-action list-group-item-warning">Pendientes</a>
+        <a href="{% url 'reviewed_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning active">Revisadas</a>
         <a href="#" class="list-group-item list-group-item-action list-group-item-warning">Facturadas</a>
     </div>
 
-    <h1 class="fs-2 mt-4 mb-2">Ordenes Pendientes</h1>
-    {% for assignment in pending_assignment_list %}
+    <h1 class="fs-2 mt-4 mb-2">Ordenes Revisadas</h1>
+    {% for assignment in reviewed_assignment_list %}
         <div class="d-flex pt-3 {% if forloop.last %} pb-2 {% endif %}">
             <div class="pb-3 lh-1 {% if not forloop.last %} border-bottom {% endif %} w-100">
                 <div class="d-flex justify-content-between">

@@ -1,6 +1,10 @@
+from typing import Any, Optional
 from django import forms
+from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import PasswordChangeForm
 from .models import User, PhoneNumber
+
 
 class LoginForm(AuthenticationForm):
     def __init__(self, *args, **kwargs):
@@ -66,5 +70,23 @@ class PhoneNumberForm(forms.ModelForm):
             'number': 'Número Telefónico',
             'is_whatsapp_number': '¿Es un número de Whatsapp?',
         }
+    #
+#
+class CustomPasswordChangeForm(PasswordChangeForm):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.label_suffix = ''
+        self.fields['old_password'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Contraseña antigua',
+        },)
+        self.fields['new_password1'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Contraseña nueva',
+        },)
+        self.fields['new_password2'].widget.attrs.update({
+            'class': 'form-control',
+            'placeholder': 'Contraseña nueva (confirmación)',
+        },)
     #
 #

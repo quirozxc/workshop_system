@@ -1,5 +1,8 @@
+from typing import Any
+from django.db.models.query import QuerySet
 from django.shortcuts import render
 from django.views.generic.base import View
+from django.views.generic.list import ListView
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import PermissionDenied
 from django.http import HttpResponseRedirect
@@ -17,19 +20,33 @@ class HomePageView(LoginRequiredMixin, View):
             return HttpResponseRedirect('management')
         #
         elif request.user.groups.filter(name=settings.DELEGATE_NAME):
-            # pending_assignment_list = request.user.pending_assignments()
-            # pending_guarantee_list = request.user.pending_assignments(just_guarantee=True)
-            pending_assignment_list = request.user.pending_all_assignments()
+            return PendingView.as_view()(request)
         #
-        else: raise PermissionDenied
-        #
-        return render(
-            request=request,
-            template_name='workshop/home_page.html',
-            context={
-                'pending_assignment_list': pending_assignment_list,
-            }
-        )
+        raise PermissionDenied
+    #
+#
+class PendingView(ListView):
+    model = Assignment
+    template_name = 'workshop/home_page.html'
+    context_object_name = 'pending_assignment_list'
+    paginate_by = 3
+    #
+    def get_queryset(self):
+        if self.request.user.groups.filter(name=settings.DELEGATE_NAME):
+            return self.request.user.pending_all_assignments()
+        raise PermissionDenied
+    #
+#
+class ReviewedView(ListView):
+    model = Assignment
+    template_name = 'workshop/reviewed.html'
+    context_object_name = 'reviewed_assignment_list'
+    paginate_by = 3
+    #
+    def get_queryset(self):
+        if self.request.user.groups.filter(name=settings.DELEGATE_NAME):
+            return self.request.user.reviewed_assignments()
+        raise PermissionDenied
     #
 #
 class ManagementView(LoginRequiredMixin, View):
@@ -40,3 +57,5 @@ class ManagementView(LoginRequiredMixin, View):
             template_name='workshop/management.html',
             context={'latest_order': Assignment.get_pendings()}
         )
+    #
+#

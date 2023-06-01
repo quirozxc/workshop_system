@@ -13,7 +13,7 @@
                     {{ user }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
-                    <li><a href="#" class="dropdown-item">Cambiar Contraseña</a></li>
+                    <li><a href="{% url 'change_password' %}" class="dropdown-item">Cambiar Contraseña</a></li>
                     <li><a href="{% url 'logout' %}" class="dropdown-item">Cerrar sesión</a></li>
                 </ul>
             </div>

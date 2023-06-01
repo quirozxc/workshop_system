@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from device.models import Device
 # Create your models here.
 class Failture(models.Model):
@@ -32,4 +33,8 @@ class RepairOrder(models.Model):
     #
     def __str__(self):
         return 'Order #%s' % (self.pk)
+    #
+    #
+    def get_as_reviewed_url(self):
+        return reverse("mark_as_reviewed", kwargs={"pk": self.pk})
 #

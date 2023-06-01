@@ -24,7 +24,7 @@ class Assignment(models.Model):
     #
     def get_absolute_url(self):
         return reverse("update_order", kwargs={"pk": self.pk})
-    
+    #
 #
 class Invoice(models.Model):
     assignment = models.OneToOneField(Assignment, on_delete=models.RESTRICT)

@@ -120,8 +120,23 @@
             </label>
         </div>
         <div class="text-end mt-4">
-            <button class="btn btn-lg btn-outline-warning" type="submit">Actualizar</button>
+            <div class="btn-group dropup">
+                <a href="#" type="button" class="btn btn-lg btn-outline-warning">Facturar</a>
+                <button type="button" class="btn btn-lg btn-outline-warning dropdown-toggle dropdown-toggle-split" data-bs-toggle="dropdown" aria-expanded="false">
+                    <span class="visually-hidden">Toggle Dropdown</span>
+                </button>
+                <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
+                    <li><button class="dropdown-item" type="submit">Actualizar Datos</button></li>
+                    <li>
+                        <a href="{{ object.order.get_as_reviewed_url }}"
+                            class="dropdown-item {% if object.order.was_reviewed %}disabled{% endif %}">
+                            Marcar Revisado
+                        </a>
+                    </li>
+                </ul>
+            </div>
         </div>
+
     </form>
 
 {% endblock %}

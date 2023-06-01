@@ -1,5 +1,5 @@
 from django.contrib import admin
-from django.contrib.auth.admin import UserAdmin as _UserAdmin
+from django.contrib.auth.admin import UserAdmin
 from user.models import User, PhoneNumber
 from device.models import Device
 # Register your models here.
@@ -11,8 +11,8 @@ class DeviceInline(admin.TabularInline):
     model = Device
     extra = 1
 #
-class UserAdmin(_UserAdmin):
-    _UserAdmin.fieldsets += (
+class CustomUserAdmin(UserAdmin):
+    UserAdmin.fieldsets += (
         ('Unique Identifier', {
             'classes': ('wide',),
             'fields': (
@@ -22,4 +22,4 @@ class UserAdmin(_UserAdmin):
     )
     inlines = (PhoneNumberInline, DeviceInline,)
 #
-admin.site.register(User, UserAdmin)
+admin.site.register(User, CustomUserAdmin)

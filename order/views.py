@@ -1,7 +1,8 @@
 from django.urls import reverse_lazy
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
 from django.views.generic import CreateView, UpdateView
 
+from .models import RepairOrder
 from user.models import User
 from workshop.models import Assignment
 
@@ -76,4 +77,22 @@ class UpdateRepairOrderView(UpdateView):
         form['assignment'].fields['is_guarantee'].disabled = True
         return form
     #
+
+    def form_valid(self, form):
+        redirect_url = super().form_valid(form)
+        note = self.object['note']
+        if note.note:
+            repair_order = self.object['repair_order']
+            if not repair_order.has_note_or_none():
+                note.repair_order = repair_order
+                note.save()
+            #
+        else: note.delete()
+        return redirect_url
+#
+def mark_as_reviewed(request, pk):
+    order = get_object_or_404(RepairOrder, pk=pk)
+    order.was_reviewed = True
+    order.save()
+    return redirect(reverse_lazy('home_page'))
 #
