@@ -153,3 +153,5 @@ DEFAULT_WARRANTY_DAYS = 15
 
 DELEGATE_NAME = 'Technical Specialist'
 MANAGER_NAME = 'Assignment Manager'
+
+WHATSAPP_URL ='https://wa.me/'

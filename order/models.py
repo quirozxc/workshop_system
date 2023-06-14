@@ -21,8 +21,6 @@ class RepairOrder(models.Model):
     was_reviewed = models.BooleanField('Was Reviewed', default=False)
     is_active = models.BooleanField('Is Active', default=True)
     #
-    date = models.DateField('Date', auto_now_add=True)
-    #
     class Meta:
         db_table = 'repair_order'
     #
@@ -33,7 +31,6 @@ class RepairOrder(models.Model):
     #
     def __str__(self):
         return 'Order #%s' % (self.pk)
-    #
     #
     def get_as_reviewed_url(self):
         return reverse("mark_as_reviewed", kwargs={"pk": self.pk})

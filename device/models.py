@@ -13,6 +13,13 @@ class Device(models.Model):
     class Meta:
         db_table = 'device'
     #
+    def get_resume(self):
+        return '%s: %s, %s, %s.' % (
+            self.name,
+            self.brand or 'no se registro marca',
+            self.model or 'no se registro modelo',
+            self.serial or 'sin serial',
+        )
     def __str__(self):
         return 'Name: %s - Owner: %s' % (self.name, self.owner)
 #

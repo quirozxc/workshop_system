@@ -11,7 +11,7 @@ class AssignmentInline(admin.TabularInline):
     extra = 1
 #
 class RepairOrderAdmin(admin.ModelAdmin):
-    list_display = ('device', 'it_includes', 'date', 'is_active',)
+    list_display = ('device', 'it_includes', 'is_active',)
     inlines = (NoteInline, AssignmentInline,)
 #
 admin.site.register(RepairOrder, RepairOrderAdmin)

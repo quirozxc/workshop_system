@@ -50,6 +50,24 @@ class User(AbstractUser):
             order__was_reviewed=True,
         ).order_by('id')
     #
+    def invoiced_assignments(self):
+        return self.assignment_set.filter(
+            invoice__isnull=False,
+        ).order_by('invoice__id')
+    #
+    def get_full_phone_number(self):
+        return '+%d%d' % (
+            self.phonenumber.idc,
+            self.phonenumber.number,
+        )
+    #
+    def get_whatsapp_url(self):
+        return '%s%d%d' % (
+            settings.WHATSAPP_URL,
+            self.phonenumber.idc,
+            self.phonenumber.number,
+        )
+    #
     def __str__(self):
         if self.first_name and self.last_name:
             return '%s %s' % (self.first_name, self.last_name)
@@ -61,7 +79,7 @@ class User(AbstractUser):
             return 'User ID #%d' % (self.id)
 #
 class PhoneNumber(models.Model):
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.OneToOneField(User, on_delete=models.RESTRICT)
     idc = models.PositiveSmallIntegerField('International Dialing Code', default=settings.VE_CODE)
     number = models.PositiveIntegerField('Phone Number')
     is_whatsapp_number = models.BooleanField('Is Whatsapp Number', default=True)

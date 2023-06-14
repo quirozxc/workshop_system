@@ -2,29 +2,32 @@
 {% block title %}{% endblock %}
 {% block content %}
 
-    <div class="list-group list-group-horizontal text-center mt-4">
-        <a href="{% url 'home_page' %}" class="list-group-item list-group-item-action list-group-item-warning">Pendientes</a>
-        <a href="{% url 'reviewed_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning active">Revisadas</a>
-        <a href="{% url 'invoiced_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning">Facturadas</a>
-    </div>
-
-    <h1 class="fs-2 mt-4 mb-2">Ordenes Revisadas</h1>
-    {% for assignment in reviewed_assignment_list %}
+    <h1 class="fs-2 mt-4 mb-2">Resultados con: {{ q }}</h1>
+    {% for assignment in assignment_list %}
         <div class="d-flex pt-3 {% if forloop.last %} pb-2 {% endif %}">
             <div class="pb-3 lh-1 {% if not forloop.last %} border-bottom {% endif %} w-100">
                 <div class="d-flex justify-content-between">
                     <h5>{{ assignment.order.device.name }}</h5>
-                    <h5>
-                        {% if assignment.is_guarantee %}
+                    <h5>{% if assignment.is_guarantee %}
                             <span class="badge text-bg-danger">Garantía</span>
                         {% endif %}
-                            Nº {{ assignment.id|stringformat:"04d" }}
+                        Nº {{ assignment.id|stringformat:"04d" }}
                     </h5>
                 </div>
                 <div class="d-flex justify-content-between">
                     <h6>{{ assignment.order.device.owner }}</h6>
-                    <p>{{ assignment.date|date:"SHORT_DATE_FORMAT" }}</p>
+                    <h5>
+                        {% if assignment.invoice %}
+                            <span class="badge text-bg-info">Facturado</span>
+                            {% if assignment.invoice.was_picked %}
+                                <span class="badge text-bg-success">Entregado</span>
+                            {% else %}
+                                <span class="badge text-bg-warning">No Entregado</span>
+                            {% endif %}
+                        {% endif %}
+                    </h5>
                 </div>
+                <!-- <p class="text-end"><strong>Fac. </strong>{{ assignment.invoice.creation_date|date:"SHORT_DATE_FORMAT" }} | <strong>Ent. </strong>{{ assignment.invoice.pickup_date|date:"SHORT_DATE_FORMAT"|default:'No disponible' }}</p> -->
                 <div class="d-flex justify-content-between">
                     <ul class="list-group small list-group-horizontal mb-2">
                         {% for failture in assignment.order.failture.all %}
@@ -41,13 +44,10 @@
         </div>
     {% empty %}
         <div class="d-flex mt-3 pb-2">
-            <h2 class="fs-1 text-warning">No hay, ¡Estas al día!</h2>
+            <h2 class="fs-1 text-warning">No hay coincidencias.</h2>
         </div>
     {% endfor %}
 
     {% include "pagination.html" %}
-    
-    <div class="text-end mt-4">
-        <a href="{% url 'create_order' %}" class="btn btn-lg btn-outline-warning">Crear Orden</a>
-    </div>
+
 {% endblock %}

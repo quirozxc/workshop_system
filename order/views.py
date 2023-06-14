@@ -26,15 +26,24 @@ class CreateRepairOrderView(CreateView):
             user.last_name = form['user'].cleaned_data['last_name']
             user.save()
             #
+            phone_number=form['phone_number'].save(commit=False)
+            phone_number.user = user
+            phone_number.save()
+            #
+        else:
+            phone_number = form['phone_number'].save(commit=False)
+            #
+            user.phonenumber.idc = phone_number.idc
+            user.phonenumber.number = phone_number.number
+            user.phonenumber.is_whatsapp_number = phone_number.is_whatsapp_number
+            #
+            user.phonenumber.save()
         #
-        phone_number = form['phone_number'].save(commit=False)
         device = form['device'].save(commit=False)
         repair_order = form['repair_order'].save(commit=False)
         assignment = form['assignment'].save(commit=False)
         #
-        device.owner = phone_number.user = user
-        #
-        phone_number.save()
+        device.owner = user
         device.save()
         #
         repair_order.device = device
@@ -63,7 +72,7 @@ class UpdateRepairOrderView(UpdateView):
         kwargs.update(
             instance={
                 'user': self.object.order.device.owner,
-                'phone_number': self.object.order.device.owner.phonenumber_set.last(),
+                'phone_number': self.object.order.device.owner.phonenumber,
                 'device': self.object.order.device,
                 'repair_order': self.object.order,
                 'assignment': self.object,
@@ -93,6 +102,12 @@ class UpdateRepairOrderView(UpdateView):
 def mark_as_reviewed(request, pk):
     order = get_object_or_404(RepairOrder, pk=pk)
     order.was_reviewed = True
+    order.save()
+    return redirect(reverse_lazy('home_page'))
+#
+def mark_as_returned(request, pk):
+    order = get_object_or_404(RepairOrder, pk=pk)
+    order.is_active = False
     order.save()
     return redirect(reverse_lazy('home_page'))
 #

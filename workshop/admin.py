@@ -2,7 +2,7 @@ from django.contrib import admin
 from workshop.models import Assignment, Invoice, Note
 # Register your models here.
 class AssignmentAdmin(admin.ModelAdmin):
-    list_display = ('order', 'delegate', 'is_guarantee', 'order_date')
+    list_display = ('order', 'delegate', 'is_guarantee', 'date')
     #
 admin.site.register(Assignment, AssignmentAdmin)
 #

@@ -9,9 +9,7 @@ class Assignment(models.Model):
     delegate = models.ForeignKey(User, on_delete=models.RESTRICT)
     is_guarantee = models.BooleanField('Is Guarantee', default=False)
     #
-    @property
-    def order_date(self):
-        return self.order.date
+    date = models.DateField('Date', auto_now_add=True)
     #
     class Meta:
         db_table = 'assignment'
@@ -22,8 +20,20 @@ class Assignment(models.Model):
     def __str__(self):
         return 'Assignment Record #%s' % (self.pk)
     #
-    def get_absolute_url(self):
-        return reverse("update_order", kwargs={"pk": self.pk})
+    def get_update_order_url(self):
+        return reverse('update_order', kwargs={'pk': self.pk})
+    #
+    def get_create_invoice_url(self):
+        return reverse('create_invoice', kwargs={'pk': self.pk})
+    #
+    def get_update_invoice_url(self):
+        return reverse('update_invoice', kwargs={'pk': self.pk})
+    #
+    def get_delete_invoice_url(self):
+        return reverse('delete_invoice', kwargs={'pk': self.pk})
+    #
+    def get_create_guarantee_url(self):
+        return reverse('create_guarantee', kwargs={'pk': self.pk})
     #
 #
 class Invoice(models.Model):
@@ -34,8 +44,19 @@ class Invoice(models.Model):
     creation_date = models.DateField('Creation Date', auto_now_add=True)
     pickup_date = models.DateField('Delivery Date', null=True, blank=True)
     #
+    @property
+    def was_picked(self):
+        if self.pickup_date:
+            return True
+        return False
+    #
     class Meta:
         db_table = 'invoice'
+    #
+    def get_note_or_none(self):
+        if hasattr(self, 'note'):
+            return self.note.note
+        return None
     #
     def __str__(self):
         return 'Invoice Record #%s' % (self.pk)
