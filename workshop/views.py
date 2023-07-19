@@ -1,5 +1,3 @@
-from typing import Any, Dict
-from django.db.models.query import QuerySet
 from django.shortcuts import render, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.views.generic.base import View
@@ -52,6 +50,8 @@ class ReviewedView(ListView):
     def get_queryset(self):
         if self.request.user.groups.filter(name=settings.DELEGATE_NAME):
             return self.request.user.reviewed_assignments()
+        elif self.request.user.groups.filter(name=settings.MANAGER_NAME):
+            return self.model.get_all_reviewed()
         raise PermissionDenied
     #
 #
@@ -64,17 +64,21 @@ class InvoicedView(ListView):
     def get_queryset(self):
         if self.request.user.groups.filter(name=settings.DELEGATE_NAME):
             return self.request.user.invoiced_assignments()
+        elif self.request.user.groups.filter(name=settings.MANAGER_NAME):
+            return self.model.get_all_invoiced()
         raise PermissionDenied
     #
 #
-class ManagementView(LoginRequiredMixin, View):
-    def get(self, request, *args, **kwargs):
-        #
-        return render(
-            request=request,
-            template_name='workshop/management.html',
-            context={'latest_order': Assignment.get_pendings()}
-        )
+class ManagementView(LoginRequiredMixin, ListView):
+    model = Assignment
+    template_name = 'workshop/management.html'
+    context_object_name = 'pending_assignment_list'
+    paginate_by = 3
+    #
+    def get_queryset(self):
+        if self.request.user.groups.filter(name=settings.MANAGER_NAME):
+            return self.model.get_all_pending()
+        raise PermissionDenied
     #
 #
 class SearchView(ListView):
@@ -97,7 +101,7 @@ class SearchView(ListView):
         except Assignment.DoesNotExist: qs = None
         finally: return qs
     #
-    def get_context_data(self, **kwargs: Any):
+    def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['q'] = self.request.GET.get('q')
         return context
@@ -119,7 +123,7 @@ class CreateInvoiceView(CreateView):
     def form_valid(self, form):
         invoice = form.save(commit=False)
         if form.cleaned_data['is_picked']:
-            invoice.pickup_date = timezone.now()
+            invoice.pickup_date = timezone.now().date()
         invoice.save()
         if form.cleaned_data['note']:
             Note.objects.create(
@@ -161,7 +165,7 @@ class UpdateInvoiceView(UpdateView):
         invoice.warranty_days = form.cleaned_data['warranty_days']
         if form.cleaned_data['is_picked']:
             if not invoice.was_picked:
-                invoice.pickup_date = timezone.now()
+                invoice.pickup_date = timezone.now().date()
         else: invoice.pickup_date = None
         invoice.save()
         if form.cleaned_data['note']:

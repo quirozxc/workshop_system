@@ -25,6 +25,9 @@
                     <h6>{{ assignment.order.device.owner }}</h6>
                     <p>{{ assignment.date|date:"SHORT_DATE_FORMAT" }}</p>
                 </div>
+                {% if user.is_a_manager %}
+                    <p class="fw-semibold">Técnico: {{ assignment.delegate }}</p>
+                {% endif %}
                 <div class="d-flex justify-content-between">
                     <ul class="list-group small list-group-horizontal mb-2">
                         {% for failture in assignment.order.failture.all %}

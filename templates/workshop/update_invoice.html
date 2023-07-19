@@ -156,7 +156,7 @@
                 <ul class="dropdown-menu dropdown-menu-end dropdown-menu-dark">
                     <li>
                         <a href="{{ object.get_create_guarantee_url }}"
-                            class="dropdown-item">
+                            class="dropdown-item {% if not object.invoice.can_apply_for_warranty %}disabled{% endif %}">
                             Crear Garantía
                         </a>
                     </li>

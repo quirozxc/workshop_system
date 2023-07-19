@@ -1,6 +1,10 @@
 from django.db import models
 from django.urls import reverse
 from django.conf import settings
+from django.utils import timezone
+#
+from datetime import timedelta
+#
 from order.models import RepairOrder
 from user.models import User
 # Create your models here.
@@ -14,8 +18,24 @@ class Assignment(models.Model):
     class Meta:
         db_table = 'assignment'
     #
-    def get_pendings():
-        return Assignment.objects.filter(invoice=None)
+    def get_all_pending():
+        return Assignment.objects.filter(
+            invoice=None,
+            order__is_active=True,
+            order__was_reviewed=False,
+        ).order_by('id')
+    #
+    def get_all_reviewed():
+        return Assignment.objects.filter(
+            invoice=None,
+            order__is_active=True,
+            order__was_reviewed=True,
+        ).order_by('id')
+    #
+    def get_all_invoiced():
+        return Assignment.objects.filter(
+            invoice__isnull=False,
+        ).order_by('invoice__id')
     #
     def __str__(self):
         return 'Assignment Record #%s' % (self.pk)
@@ -58,8 +78,16 @@ class Invoice(models.Model):
             return self.note.note
         return None
     #
+    def can_apply_for_warranty(self):
+        if self.pickup_date:
+            if self.pickup_date + timedelta(days=self.warranty_days) >= timezone.now().date():
+                return True
+            #
+        return False
+    #
     def __str__(self):
         return 'Invoice Record #%s' % (self.pk)
+    #
 #
 class Note(models.Model):
     invoice = models.OneToOneField(Invoice, on_delete=models.CASCADE, null=True, blank=True)

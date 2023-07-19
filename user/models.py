@@ -68,6 +68,9 @@ class User(AbstractUser):
             self.phonenumber.number,
         )
     #
+    def is_a_manager(self):
+        return True if self.groups.filter(name=settings.MANAGER_NAME) else False
+    #
     def __str__(self):
         if self.first_name and self.last_name:
             return '%s %s' % (self.first_name, self.last_name)
