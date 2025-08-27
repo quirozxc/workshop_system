@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+
+    <div class="list-group list-group-horizontal text-center mt-4">
+        <a href="{% url 'home_page' %}" class="list-group-item list-group-item-action list-group-item-warning">Pendientes</a>
+        <a href="{% url 'reviewed_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning active">Revisadas</a>
+        <a href="{% url 'invoiced_assignments' %}" class="list-group-item list-group-item-action list-group-item-warning">Facturadas</a>
+    </div>
+
+    <h1 class="fs-2 mt-4 mb-2">Ordenes Revisadas</h1>
+    {% for assignment in reviewed_assignment_list %}
+        <div class="d-flex pt-3 {% if forloop.last %} pb-2 {% endif %}">
+            <div class="pb-3 lh-1 {% if not forloop.last %} border-bottom {% endif %} w-100">
+                <div class="d-flex justify-content-between">
+                    <h5 class="text-warning">{{ assignment.order.device.name }}</h5>
+                    <h5>
+                        {% if assignment.is_guarantee %}
+                            <span class="badge text-bg-danger">Garantía</span>
+                        {% endif %}
+                            Nº {{ assignment.id|stringformat:"04d" }}
+                    </h5>
+                </div>
+                <div class="d-flex justify-content-between">
+                    <h6>{{ assignment.order.device.owner }}</h6>
+                    <p>{{ assignment.date|date:"SHORT_DATE_FORMAT" }}</p>
+                </div>
+                {% if user.is_a_manager %}
+                    <p class="fw-semibold">Técnico: {{ assignment.delegate }}</p>
+                {% endif %}
+                <div class="d-flex justify-content-between">
+                    <ul class="list-group small list-group-horizontal mb-2">
+                        {% for failture in assignment.order.failture.all %}
+                            <li class="list-group-item list-group-item-danger">{{ failture }}</li>
+                        {% endfor %}
+                    </ul>
+                    <a href="{{ assignment.get_update_order_url }}" class="btn btn-outline-warning">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="currentColor" class="bi bi-arrow-right-circle" viewBox="0 0 16 16">
+                            <path fill-rule="evenodd" d="M1 8a7 7 0 1 0 14 0A7 7 0 0 0 1 8zm15 0A8 8 0 1 1 0 8a8 8 0 0 1 16 0zM4.5 7.5a.5.5 0 0 0 0 1h5.793l-2.147 2.146a.5.5 0 0 0 .708.708l3-3a.5.5 0 0 0 0-.708l-3-3a.5.5 0 1 0-.708.708L10.293 7.5H4.5z"/>
+                        </svg>
+                    </a>
+                </div>
+            </div>
+        </div>
+    {% empty %}
+        <div class="d-flex mt-3 pb-2">
+            <h2 class="fs-1 text-warning">No hay, ¡Estas al día!</h2>
+        </div>
+    {% endfor %}
+
+    {% include "pagination.html" %}
+    
+    <div class="text-end mt-4">
+        <a href="{% url 'create_order' %}" class="btn btn-lg btn-outline-warning">Crear Orden</a>
+    </div>
+{% endblock %}

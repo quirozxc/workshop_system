@@ -1,0 +1,66 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es" data-bs-theme="dark">
+    <head>
+        <meta charset="UTF-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+        <link rel="shortcut icon" type="image/png" href="{% static 'favicon.ico' %}"/>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.3/font/bootstrap-icons.css">
+        <style>
+            @media (prefers-color-scheme: dark) {
+                :root {
+                    --body-bg: rgb(33, 37, 41);
+                    --body-color: rgb(255, 255, 255);
+                }
+            }
+            body {
+                background: var(--body-bg);
+                color: var(--body-color);
+            }
+        </style>
+        <title>{% block title %}{% endblock %}</title>
+        {% block extra_css %}{% endblock %}
+    </head>
+    <body class="container">
+        {% include "header.html" %}
+        <div class="row">
+            <div class="col-11 mx-auto">
+                {% include "search.html" %}
+                <main>
+
+                    {% if form %}
+                        {% for error in form.non_field_errors %}
+                            <div id="modal_error" class="modal my-4" tabindex="-1">
+                                <div class="modal-dialog">
+                                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                                        <strong>{{ error|escape }}</strong>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% endif %}
+
+                    {% block content %}{% endblock %}
+                </main>
+                <aside>
+                    {% block aside %}{% endblock %}
+                </aside>
+                {% include "footer.html" %}
+            </div>
+        </div>
+
+        <script type="text/javascript" src="{% static 'js/bootstrap.bundle.min.js' %}"></script>
+        <script src="https://code.jquery.com/jquery-3.6.3.min.js" integrity="sha256-pvPw+upLPUjgMXY0G+8O0xUf+/Im1MZjXxxgOcBQBXU=" crossorigin="anonymous"></script>
+        <script>
+            $(document).ready(function() {
+                setTimeout(function() {
+                    $('#modal_error').modal('toggle')
+                }, 200);
+            });
+        </script>
+        {% block extra_js %}{% endblock %}
+    </body>
+</html>

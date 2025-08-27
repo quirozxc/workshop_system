@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+{% block title %}{% endblock %}
+{% block content %}
+
+    <h1 class="fs-2 mt-4 mb-2">Orden Nueva</h1>
+    <form method="post">
+        {% csrf_token %}
+        <h4 class="text-warning mb-3">Información del Cliente</h4>
+            <div class="row g-2">
+                <div class="col">
+                    <div class="form-floating text-black">
+                        {{ form.user.first_name }}
+                        {{ form.user.first_name.label_tag }}
+                    </div>
+                </div>
+                <div class="col">
+                    <div class="form-floating text-black">
+                        {{ form.user.last_name }}
+                        {{ form.user.last_name.label_tag }}
+                    </div>
+                </div>
+            </div>
+            <div class="form-floating text-black">
+                {{ form.user.dni }}
+                {{ form.user.dni.label_tag }}
+            </div>
+        <h4 class="text-warning mt-3 mb-3">Información de Contacto</h4>
+        <div class="row g-2">
+            <div class="col-4">
+                <div class="form-floating text-black">
+                    {{ form.phone_number.idc }}
+                    {{ form.phone_number.idc.label_tag }}
+                </div>
+            </div>
+            <div class="col-8">        
+                <div class="form-floating text-black">
+                    {{ form.phone_number.number }}
+                    {{ form.phone_number.number.label_tag }}
+                </div>
+            </div>
+        </div>
+        <div class="form-check form-check-reverse form-switch my-2">
+            {{ form.phone_number.is_whatsapp_number }}
+            <label
+                class="form-check-label"
+                for="{{ form.phone_number.is_whatsapp_number.id_for_label }}">
+                {{ form.phone_number.is_whatsapp_number.label }}
+            </label>
+        </div>
+        <h4 class="text-warning mt-3 mb-3">Información del Dispositivo</h4>
+        <div class="row g-2 pb-2">
+            <div class="col">
+                <div class="form-floating text-black">
+                    {{ form.device.name }}
+                    {{ form.device.name.label_tag }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating text-black">
+                    {{ form.device.brand }}
+                    {{ form.device.brand.label_tag }}
+                </div>
+            </div>
+        </div>
+        <div class="row g-2 pb-2">
+            <div class="col">
+                <div class="form-floating text-black">
+                    {{ form.device.model }}
+                    {{ form.device.model.label_tag }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="form-floating text-black">
+                    {{ form.device.serial }}
+                    {{ form.device.serial.label_tag }}
+                </div>
+            </div>
+        </div>
+        <div class="form-floating text-black">
+            {{ form.repair_order.failture_description }}
+            {{ form.repair_order.failture_description.label_tag }}
+        </div>
+        <div class="form-floating text-black my-2">
+            {{ form.repair_order.description }}
+            {{ form.repair_order.description.label_tag }}
+        </div>
+        <div class="row g-2 pb-2">
+            <div class="col">
+                <div class="form-floating text-black">
+                    {{ form.repair_order.it_includes }}
+                    {{ form.repair_order.it_includes.label_tag }}
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group">
+                    <span class="input-group-text fs-4">&nbsp;$&nbsp;</span>
+                    <div class="form-floating text-black">
+                        {{ form.repair_order.budget }}
+                        {{ form.repair_order.budget.label_tag }}
+                    </div>
+                </div>
+            </div>
+        </div>
+        <hr>
+        <h4 class="text-warning mt-3 mb-3">Gerencia</h4>
+        <div class="form-floating text-black">
+            {{ form.assignment.delegate }}
+            {{ form.assignment.delegate.label_tag }}
+        </div>
+        <div class="form-check form-switch mt-2">
+            {{ form.assignment.is_guarantee }}
+            <label
+                class="form-check-label"
+                for="{{ form.assignment.is_guarantee.id_for_label }}">
+                {{ form.assignment.is_guarantee.label }}
+            </label>
+        </div>
+        <div class="text-end mt-4">
+            <button class="btn btn-lg btn-outline-warning" type="submit">Crear</button>
+        </div>
+    </form>
+
+{% endblock %}
